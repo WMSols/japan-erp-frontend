@@ -1,127 +1,92 @@
-import type { RepairJob, WorkshopStats } from '@/types/types'
+import type { RepairJob } from "@/types/workShopTypes";
+
+// ─── Mock Repair Jobs ──────────────────────────────────────────────────────
+
+export const MOCK_REPAIR_JOBS: RepairJob[] = [
+  {
+    id: "WO-001",
+    vehicleId: "JN1TANY31A0000001",
+    vehicleName: "Nissan Patrol Y61",
+    status: "in_progress",
+    assignedTo: "Tanaka Auto Workshop",
+    startDate: "2025-05-01",
+    estimatedEndDate: "2025-05-12",
+    description: "Engine oil leak, front brake pads replacement, AC recharge",
+    charges: [
+      { id: "c1", type: "labor", description: "Engine inspection & oil seal replacement", quantity: 4, unitCost: 8000, totalCost: 32000 },
+      { id: "c2", type: "parts", description: "Oil seal kit", quantity: 1, unitCost: 12000, totalCost: 12000 },
+      { id: "c3", type: "parts", description: "Front brake pads (set)", quantity: 1, unitCost: 9500, totalCost: 9500 },
+      { id: "c4", type: "labor", description: "Brake pad installation", quantity: 1.5, unitCost: 6000, totalCost: 9000 },
+      { id: "c5", type: "external", description: "AC system recharge – AutoCool Ltd", quantity: 1, unitCost: 15000, totalCost: 15000 },
+    ],
+    totalCost: 77500,
+    notes: "Waiting for oil seal kit delivery – expected May 10",
+  },
+  {
+    id: "WO-002",
+    vehicleId: "JTMBE33V585007842",
+    vehicleName: "Toyota Land Cruiser 200",
+    status: "completed",
+    assignedTo: "Yamamoto Garage",
+    startDate: "2025-04-18",
+    estimatedEndDate: "2025-04-25",
+    actualEndDate: "2025-04-24",
+    description: "Full body respray, rust treatment underbody",
+    charges: [
+      { id: "c6", type: "external", description: "Full body respray – Suzuki Paint Works", quantity: 1, unitCost: 95000, totalCost: 95000 },
+      { id: "c7", type: "labor", description: "Rust treatment & underbody seal", quantity: 8, unitCost: 7500, totalCost: 60000 },
+      { id: "c8", type: "parts", description: "Underbody sealant & primer", quantity: 3, unitCost: 4800, totalCost: 14400 },
+    ],
+    totalCost: 169400,
+  },
+  {
+    id: "WO-003",
+    vehicleId: "KNDJN2A2XD7567294",
+    vehicleName: "Kia Sportage 2013",
+    status: "pending",
+    assignedTo: "In-house",
+    startDate: "2025-05-10",
+    estimatedEndDate: "2025-05-18",
+    description: "Gearbox service, tyres replacement x4, interior deep clean",
+    charges: [
+      { id: "c9", type: "labor", description: "Gearbox service", quantity: 6, unitCost: 7000, totalCost: 42000 },
+      { id: "c10", type: "parts", description: "ATF fluid & filter", quantity: 1, unitCost: 8500, totalCost: 8500 },
+      { id: "c11", type: "parts", description: "Tyres 235/60R17 x4", quantity: 4, unitCost: 18000, totalCost: 72000 },
+      { id: "c12", type: "external", description: "Interior detail – CleanPro", quantity: 1, unitCost: 12000, totalCost: 12000 },
+    ],
+    totalCost: 134500,
+    notes: "Waiting for tyre stock confirmation",
+  },
+  {
+    id: "WO-004",
+    vehicleId: "1HGCM82633A004352",
+    vehicleName: "Honda Accord 2015",
+    status: "completed",
+    assignedTo: "In-house",
+    startDate: "2025-04-10",
+    estimatedEndDate: "2025-04-14",
+    actualEndDate: "2025-04-13",
+    description: "Engine tune-up, spark plugs, air filter",
+    charges: [
+      { id: "c13", type: "labor", description: "Tune-up service", quantity: 3, unitCost: 6500, totalCost: 19500 },
+      { id: "c14", type: "parts", description: "Spark plugs x4", quantity: 4, unitCost: 1200, totalCost: 4800 },
+      { id: "c15", type: "parts", description: "Air filter", quantity: 1, unitCost: 3200, totalCost: 3200 },
+    ],
+    totalCost: 27500,
+  },
+];
 
 export const MECHANICS = [
-  "Kenji Tanaka",
-  "Hiroshi Yamada",
-  "Satoshi Inoue",
-  "Ryo Nakamura",
-  "Takeshi Abe",
+  "In-house",
+  "Tanaka Auto Workshop",
+  "Yamamoto Garage",
+  "AutoCool Ltd",
+  "Suzuki Paint Works",
+  "CleanPro",
 ];
 
-export const SEED_JOBS: RepairJob[] = [
-  {
-    id: "rj-001",
-    vehicleId: "JN1AAAZ32Z0000001",
-    vehicleName: "Nissan Skyline GT-R",
-    assignedTo: "Kenji Tanaka",
-    status: "In Progress",
-    description: "Full engine overhaul — replace head gasket, timing belt, and coolant flush.",
-    laborCost: 85_000,
-    externalCharge: 0,
-    parts: [
-      { id: "p1", name: "Head Gasket Set", quantity: 1, unitCost: 24_000 },
-      { id: "p2", name: "Timing Belt Kit", quantity: 1, unitCost: 18_500 },
-      { id: "p3", name: "Coolant 5L", quantity: 2, unitCost: 3_200 },
-    ],
-    createdAt: "2025-04-02T09:00:00Z",
-    updatedAt: "2025-04-10T14:30:00Z",
-  },
-  {
-    id: "rj-002",
-    vehicleId: "JTDKB20U693354289",
-    vehicleName: "Toyota Prius",
-    assignedTo: "Hiroshi Yamada",
-    status: "Pending",
-    description: "Replace front bumper, left headlight unit, and realign hood panel.",
-    laborCost: 35_000,
-    externalCharge: 12_000,
-    parts: [
-      { id: "p4", name: "Front Bumper Assembly", quantity: 1, unitCost: 48_000 },
-      { id: "p5", name: "Headlight Unit (L)", quantity: 1, unitCost: 22_000 },
-    ],
-    createdAt: "2025-04-08T11:15:00Z",
-    updatedAt: "2025-04-08T11:15:00Z",
-  },
-  {
-    id: "rj-003",
-    vehicleId: "JHMCB7560SC000032",
-    vehicleName: "Honda CR-V",
-    assignedTo: "Satoshi Inoue",
-    status: "Completed",
-    description: "AC regas, cabin filter replacement, and brake pad replacement (all four corners).",
-    laborCost: 28_000,
-    externalCharge: 8_500,
-    parts: [
-      { id: "p6", name: "Brake Pad Set (Front)", quantity: 1, unitCost: 9_800 },
-      { id: "p7", name: "Brake Pad Set (Rear)", quantity: 1, unitCost: 8_200 },
-      { id: "p8", name: "Cabin Air Filter", quantity: 1, unitCost: 2_400 },
-      { id: "p9", name: "Refrigerant R134a", quantity: 1, unitCost: 4_500 },
-    ],
-    createdAt: "2025-03-25T08:00:00Z",
-    updatedAt: "2025-04-01T16:00:00Z",
-    completedAt: "2025-04-01T16:00:00Z",
-  },
-  {
-    id: "rj-004",
-    vehicleId: "VNKKTUD33FA049421",
-    vehicleName: "Toyota Alphard",
-    assignedTo: "Ryo Nakamura",
-    status: "On Hold",
-    description: "Transmission rebuild — waiting for imported parts from dealer.",
-    laborCost: 120_000,
-    externalCharge: 45_000,
-    parts: [
-      { id: "p10", name: "Transmission Rebuild Kit", quantity: 1, unitCost: 95_000 },
-    ],
-    createdAt: "2025-03-30T10:00:00Z",
-    updatedAt: "2025-04-05T09:00:00Z",
-  },
-  {
-    id: "rj-005",
-    vehicleId: "KMHD341BPEU000189",
-    vehicleName: "Hyundai Tucson",
-    assignedTo: "Takeshi Abe",
-    status: "In Progress",
-    description: "Full detailing, paint correction, scratch repair on rear quarter panel.",
-    laborCost: 42_000,
-    externalCharge: 18_000,
-    parts: [
-      { id: "p11", name: "Paint (Pearl White)", quantity: 2, unitCost: 8_800 },
-      { id: "p12", name: "Clear Coat", quantity: 1, unitCost: 5_200 },
-    ],
-    createdAt: "2025-04-11T08:30:00Z",
-    updatedAt: "2025-04-12T12:00:00Z",
-  },
-];
-
-// ── Derived helpers ────────────────────────────────────────────────────────
-export function calcPartsCost(parts: RepairJob["parts"]): number {
-  return parts.reduce((acc, p) => acc + p.quantity * p.unitCost, 0);
-}
-
-export function calcTotalCost(job: RepairJob): number {
-  return job.laborCost + job.externalCharge + calcPartsCost(job.parts);
-}
-
-export function deriveStats(jobs: RepairJob[]): WorkshopStats {
-  return {
-    total: jobs.length,
-    pending: jobs.filter((j) => j.status === "Pending").length,
-    inProgress: jobs.filter((j) => j.status === "In Progress").length,
-    completed: jobs.filter((j) => j.status === "Completed").length,
-    onHold: jobs.filter((j) => j.status === "On Hold").length,
-    totalLaborCost: jobs.reduce((a, j) => a + j.laborCost, 0),
-    totalPartsCost: jobs.reduce((a, j) => a + calcPartsCost(j.parts), 0),
-    totalExternalCharge: jobs.reduce((a, j) => a + j.externalCharge, 0),
-  };
-}
-
-export function formatYen(n: number) {
-  return "¥" + n.toLocaleString();
-}
-
-export function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString("en-GB", {
-    day: "2-digit", month: "short", year: "numeric",
-  });
-}
+export const CHARGE_TYPE_LABELS: Record<string, string> = {
+  labor: "Labor",
+  parts: "Parts",
+  external: "External",
+};

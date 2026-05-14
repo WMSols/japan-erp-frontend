@@ -1,30 +1,43 @@
-'use client'
+"use client";
+
 import { useState } from "react";
-import { CarIcon, WrenchIcon, SalesIcon, LedgerIcon, ReportsIcon, SettingsIcon, MenuIcon, ChevronLeftIcon } from "./components/SidebarIcons";
+import { useSidebar } from "@/context/SidebarContext";
+import {
+  CarIcon,
+  WrenchIcon,
+  SalesIcon,
+  LedgerIcon,
+  ReportsIcon,
+  SettingsIcon,
+  MenuIcon,
+  ChevronLeftIcon,
+} from "./components/SidebarIcons";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { User2 } from "lucide-react";
+
 type NavItem = {
   label: string;
   icon: React.ReactNode;
-  href?: string;
+  href: string;
 };
 
-
-interface SidebarProps {
-  collapsed: boolean;
-  setCollapsed : (collapsed: boolean) => void;
-}
 const navItems: NavItem[] = [
-  { label: "Vehicles",  icon: <CarIcon />,     href: "/vehicles"  },
-  { label: "Workshop",  icon: <WrenchIcon />,   href: "/workshop"  },
-  { label: "Sales",     icon: <SalesIcon />,    href: "/sales"     },
-  { label: "Ledgers",   icon: <LedgerIcon />,   href: "/ledgers"   },
-  { label: "Reports",   icon: <ReportsIcon />,  href: "/reports"   },
-  { label: "Settings",  icon: <SettingsIcon />, href: "/settings"  },
+  { label: "Vehicles",  icon: <CarIcon />,     href: "/" },
+  { label: "Purchase",  icon: <ReportsIcon />, href: "/purchase" },
+  { label: "Workshop",  icon: <WrenchIcon />,  href: "/workshop" },
+  { label: "Sales",     icon: <SalesIcon />,   href: "/sales" },
+  { label: "Ledgers",   icon: <LedgerIcon />,  href: "/ledgers" },
+  { label: "Reports",   icon: <ReportsIcon />, href: "/reports" },
+  { label: "Customers", icon: <User2 size={20} />, href: "/customers" },
+  { label: "Sellers",   icon: <User2 size={20} />, href: "/sellers" },
+  { label: "Settings",  icon: <SettingsIcon />, href: "/settings" },
 ];
 
-export default function Sidebar({setCollapsed , collapsed}: SidebarProps) {
+export default function Sidebar() {
+  const { collapsed, setCollapsed } = useSidebar();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [active, setActive] = useState("Vehicles");
+  const pathname = usePathname();
 
   return (
     <>
@@ -37,7 +50,9 @@ export default function Sidebar({setCollapsed , collapsed}: SidebarProps) {
         >
           <MenuIcon />
         </button>
-        <span className="text-sm font-semibold tracking-tight text-gray-800">AutoTrack JP</span>
+        <span className="text-sm font-semibold tracking-tight text-gray-800">
+          AutoTrack JP
+        </span>
       </div>
 
       {/* ── Mobile overlay ─────────────────────────────────────── */}
@@ -51,12 +66,9 @@ export default function Sidebar({setCollapsed , collapsed}: SidebarProps) {
       {/* ── Sidebar panel ──────────────────────────────────────── */}
       <aside
         className={[
-          // base
           "fixed top-0 left-0 z-50 flex flex-col h-screen bg-white border-r border-gray-100",
           "shadow-[2px_0_12px_rgba(0,0,0,0.05)] transition-all duration-300 ease-in-out",
-          // desktop width
           collapsed ? "w-[68px]" : "w-[220px]",
-          // mobile: slide in/out
           "max-md:w-[220px]",
           mobileOpen ? "max-md:translate-x-0" : "max-md:-translate-x-full",
         ].join(" ")}
@@ -68,8 +80,12 @@ export default function Sidebar({setCollapsed , collapsed}: SidebarProps) {
           </div>
           {!collapsed && (
             <div className="overflow-hidden">
-              <p className="text-sm font-semibold text-gray-900 whitespace-nowrap leading-tight">AutoTrack</p>
-              <p className="text-[10px] text-gray-400 whitespace-nowrap tracking-wide uppercase">Japan</p>
+              <p className="text-sm font-semibold text-gray-900 whitespace-nowrap leading-tight">
+                AutoTrack
+              </p>
+              <p className="text-[10px] text-gray-400 whitespace-nowrap tracking-wide uppercase">
+                Japan
+              </p>
             </div>
           )}
         </div>
@@ -77,42 +93,46 @@ export default function Sidebar({setCollapsed , collapsed}: SidebarProps) {
         {/* Nav items */}
         <nav className="flex-1 overflow-y-auto overflow-x-hidden py-4 px-2 space-y-0.5">
           {navItems.map((item) => {
-            const isActive = active === item.label;
+            // Active based on real URL, not manual state
+            const isActive =
+              item.href === "/"
+                ? pathname === "/"
+                : pathname.startsWith(item.href);
+
             return (
               <Link
-              href={`${item.href}`}
+                href={item.href}
                 key={item.label}
-                onClick={() => {
-                  setActive(item.label);
-                  setMobileOpen(false);
-                }}
+                onClick={() => setMobileOpen(false)}
                 title={collapsed ? item.label : undefined}
                 className={[
-                  "group w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all duration-150",
+                  "relative group w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all duration-150",
                   "focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-300",
                   isActive
                     ? "bg-gray-900 text-white"
                     : "text-gray-500 hover:bg-gray-50 hover:text-gray-800",
                 ].join(" ")}
               >
-                {/* Icon */}
-                <span className={[
-                  "flex-shrink-0 transition-colors",
-                  isActive ? "text-white" : "text-gray-400 group-hover:text-gray-700",
-                ].join(" ")}>
+                <span
+                  className={[
+                    "flex-shrink-0 transition-colors",
+                    isActive
+                      ? "text-white"
+                      : "text-gray-400 group-hover:text-gray-700",
+                  ].join(" ")}
+                >
                   {item.icon}
                 </span>
 
-                {/* Label */}
                 {!collapsed && (
-                  <span className="font-medium tracking-tight whitespace-nowrap">{item.label}</span>
+                  <span className="font-medium tracking-tight whitespace-nowrap">
+                    {item.label}
+                  </span>
                 )}
 
-                {/* Active dot when collapsed */}
                 {collapsed && isActive && (
                   <span className="absolute left-1 w-1 h-5 rounded-full bg-gray-900" />
                 )}
-
               </Link>
             );
           })}

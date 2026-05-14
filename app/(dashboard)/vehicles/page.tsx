@@ -115,7 +115,7 @@ export default function VehiclesPage() {
   const sold = purchases.filter((p) => p.status === "Sold").length;
 
   return (
-    <div className="min-h-screen bg-gray-50/60">
+    <div className="min-h-screen bg-gray-50/60 space-y-6">
       {/* ── Page header ─────────────────────────────────────────────────── */}
       <div className="bg-white border-b border-gray-100 px-6 py-5">
         <div className="max-w-6xl mx-auto flex items-start justify-between gap-4">
