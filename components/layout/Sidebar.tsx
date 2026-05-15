@@ -29,7 +29,7 @@ const navItems: NavItem[] = [
   { label: "Ledgers",   icon: <LedgerIcon />,  href: "/ledgers" },
   { label: "Reports",   icon: <ReportsIcon />, href: "/reports" },
   { label: "Customers", icon: <User2 size={20} />, href: "/customers" },
-  { label: "Sellers",   icon: <User2 size={20} />, href: "/sellers" },
+  { label: "Suppliers", icon: <User2 size={20} />, href: "/suppliers" },
   { label: "Settings",  icon: <SettingsIcon />, href: "/settings" },
 ];
 
@@ -74,7 +74,7 @@ export default function Sidebar() {
       >
         {/* Logo / brand */}
         <div className="flex items-center gap-3 px-4 py-5 border-b border-gray-50">
-          <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-gray-900 flex items-center justify-center">
+          <div className="shrink-0 w-8 h-8 rounded-lg bg-gray-900 flex items-center justify-center">
             <span className="text-white text-xs font-bold tracking-tight">AT</span>
           </div>
           {!collapsed && (
