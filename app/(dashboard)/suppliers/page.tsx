@@ -39,7 +39,7 @@ export default function SuppliersPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight text-gray-900">Suppliers & Suppliers</h1>
+          <h1 className="text-2xl font-semibold tracking-tight text-gray-900">Suppliers</h1>
           <p className="text-sm text-gray-500">Manage accounts payable and vendor ledgers</p>
         </div>
         <Button onClick={() => setIsAddModalOpen(true)} className="bg-gray-900 text-white hover:bg-gray-800">
