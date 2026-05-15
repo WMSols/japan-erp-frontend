@@ -1,11 +1,5 @@
-import React from 'react'
+import ReportsPage from "./ReportsPage";
 
-const page = () => {
-  return (
-   <div className='bg-white p-6 '>
-      <h1 className='text-2xl font-semibold text-center'>Reports Page</h1>
-    </div>
-  )
+export default function Page() {
+  return <ReportsPage />;
 }
-
-export default page
