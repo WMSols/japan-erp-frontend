@@ -180,7 +180,9 @@ export default function AddSaleModal({
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent aria-describedby="Add sale modal" className="max-w-2xl max-h-[90vh] overflow-y-auto p-0">
+      <DialogContent
+       aria-describedby="Add sale modal"
+        className="max-w-2xl max-h-[90vh] overflow-y-auto p-0">
         <DialogHeader className="px-6 pt-6 pb-4 border-b border-gray-100">
           <DialogTitle className="text-base font-semibold">
             {isEdit ? "Edit Sale" : "Record New Sale"}

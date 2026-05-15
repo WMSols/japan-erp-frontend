@@ -162,7 +162,9 @@ export default function AddRepairJobModal({
 
   return (
     <Dialog  open={open} onOpenChange={onClose}>
-      <DialogContent aria-describedby="Repair job adding modal" className="max-w-3xl max-h-[90vh] overflow-y-auto p-0">
+      <DialogContent
+      aria-describedby="Repair job adding modal"
+      className="max-w-3xl max-h-[90vh] overflow-y-auto p-0">
         <DialogHeader className="px-6 pt-6 pb-4 border-b border-gray-100">
           <DialogTitle className="text-base font-semibold">
             {isEdit ? "Edit Repair Job" : "New Repair Job"}
