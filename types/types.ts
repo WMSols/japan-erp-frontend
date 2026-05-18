@@ -6,7 +6,7 @@ export interface VehiclePurchase {
   auctionFee: number;
   warehouse: string;
   imagePreview: string | null;
-  status: "Purchased" | "In Repair" | "Ready" | "Sold";
+  status: "Draft" | "Purchased" | "In Repair" | "Ready" | "Sold";
   addedAt: string; // ISO date string
 }
 // ─── Sales Types ────────────────────────────────────────────────────────────
@@ -158,4 +158,20 @@ export interface CashBankAccount {
   openingBalance: number;
   entries: LedgerEntry[];
   balance: number;
+}
+// Vehilcle detail types
+export type VehicleStatus = "Purchased" | "In Repair" | "Ready" | "Sold";
+
+export type TimelineEntryType = "purchase" | "repair" | "return" | "sale";
+export type TimelineEntryStatus = "draft" | "submitted";
+
+export interface TimelineEntry {
+  id: string;
+  type: TimelineEntryType;
+  date: string;
+  description: string;
+  amount?: number;
+  invoiceNumber: string;
+  status: TimelineEntryStatus;
+  details?: string;
 }

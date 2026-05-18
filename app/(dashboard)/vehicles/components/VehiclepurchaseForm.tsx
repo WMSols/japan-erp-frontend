@@ -122,7 +122,7 @@ export default function VehiclePurchaseForm({ onAdd }: Props) {
   const handleSubmit = async () => {
     if (!validate()) return;
     setSubmitting(true);
-    await new Promise((r) => setTimeout(r, 600)); // simulate async
+    await new Promise((r) => setTimeout(r, 600));
 
     const supplier = SUPPLIERS.find((s) => s.id === form.supplierId)!;
     onAdd({
@@ -313,8 +313,10 @@ export default function VehiclePurchaseForm({ onAdd }: Props) {
         <div className="flex items-center gap-3">
           {success && (
             <span className="text-xs text-emerald-500 font-medium flex items-center gap-1">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-              Added to list
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              Draft created
             </span>
           )}
           <button
@@ -329,13 +331,19 @@ export default function VehiclePurchaseForm({ onAdd }: Props) {
           >
             {submitting ? (
               <>
-                <svg className="animate-spin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
-                Adding…
+                <svg className="animate-spin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+                </svg>
+                Saving…
               </>
             ) : (
               <>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                Add Purchase
+                {/* Draft icon — document with pencil */}
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                </svg>
+                Create Draft
               </>
             )}
           </button>
