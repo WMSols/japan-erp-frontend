@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import type { SaleItem } from "@/types/types";
 import { MOCK_CUSTOMERS } from "@/data/sales";
+import { MOCK_VEHICLES } from "@/data/vehiclesData"
 import {
   formatYen,
   computeNetRevenue,
@@ -72,6 +73,9 @@ export default function AddSaleModal({
   existingInvoiceNumbers,
 }: AddSaleModalProps) {
   const isEdit = !!editSale;
+  const availableVehicles = MOCK_VEHICLES.filter(
+  (v) => v.location === "yard" || v.location === "showroom"
+)
 
   const defaultForm: FormState = {
     vehicleId: "",
@@ -141,6 +145,23 @@ export default function AddSaleModal({
       customerName: customer?.name ?? "",
     }));
   }
+  function handleVehicleByVin(vin: string) {
+  const vehicle = availableVehicles.find((v) => v.id === vin);
+  setForm((prev) => ({
+    ...prev,
+    vehicleId: vin,
+    vehicleName: vehicle?.name ?? "",
+  }));
+}
+
+function handleVehicleByName(name: string) {
+  const vehicle = availableVehicles.find((v) => v.name === name);
+  setForm((prev) => ({
+    ...prev,
+    vehicleName: name,
+    vehicleId: vehicle?.id ?? "",
+  }));
+}
 
   function handleSave() {
     const netRev = computeNetRevenue(sp, comm, disc);
@@ -193,30 +214,69 @@ export default function AddSaleModal({
         </DialogHeader>
 
         <div className="px-6 py-5 space-y-6">
-          {/* ── Vehicle ── */}
-          <section>
-            <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Vehicle</h3>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-1.5">
-                <Label className="text-xs">VIN / Chassis No. *</Label>
-                <Input
-                  placeholder="e.g. JTMBE33V585007842"
-                  value={form.vehicleId}
-                  onChange={(e) => set("vehicleId", e.target.value)}
-                  className="h-9 text-sm font-mono"
-                />
-              </div>
-              <div className="space-y-1.5">
-                <Label className="text-xs">Vehicle Name *</Label>
-                <Input
-                  placeholder="e.g. Toyota Land Cruiser 200"
-                  value={form.vehicleName}
-                  onChange={(e) => set("vehicleName", e.target.value)}
-                  className="h-9 text-sm"
-                />
-              </div>
-            </div>
-          </section>
+       {/* ── Vehicle ── */}
+<section>
+  <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
+    Vehicle
+  </h3>
+  <div className="grid grid-cols-1 gap-4">
+    {/* VIN dropdown */}
+    <div className="space-y-1.5">
+      <Label className="text-xs">VIN / Chassis No. *</Label>
+      <Select value={form.vehicleId} onValueChange={handleVehicleByVin}>
+        <SelectTrigger className="h-9 text-sm font-mono">
+          <SelectValue placeholder="Select VIN..." />
+        </SelectTrigger>
+        <SelectContent>
+          {availableVehicles.map((v) => (
+            <SelectItem key={v.id} value={v.id} className="text-sm font-mono">
+              <span className="font-mono">{v.id}</span>
+              <span className="ml-2 text-[10px] text-gray-400 font-sans normal-case">
+                {v.locationLabel}
+              </span>
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    </div>
+
+    {/* Vehicle Name dropdown */}
+    <div className="space-y-1.5">
+      <Label className="text-xs">Vehicle Name *</Label>
+      <Select value={form.vehicleName} onValueChange={handleVehicleByName}>
+        <SelectTrigger className="h-9 text-sm">
+          <SelectValue placeholder="Select vehicle..." />
+        </SelectTrigger>
+        <SelectContent>
+          {availableVehicles.map((v) => (
+            <SelectItem key={v.id} value={v.name} className="text-sm">
+              {v.name}
+              <span className="ml-2 text-[10px] text-gray-400">
+                — {v.locationLabel}
+              </span>
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    </div>
+  </div>
+
+  {/* Location badge — shown once a vehicle is selected */}
+  {form.vehicleId && (() => {
+    const selected = availableVehicles.find((v) => v.id === form.vehicleId);
+    if (!selected) return null;
+    const isShowroom = selected.location === "showroom";
+    return (
+      <p className="mt-2 text-[11px] text-gray-500">
+        📍 Location:{" "}
+        <span className={`font-medium ${isShowroom ? "text-blue-600" : "text-amber-600"}`}>
+          {selected.locationLabel}
+        </span>
+        <span className="ml-1.5 capitalize text-gray-400">({selected.location})</span>
+      </p>
+    );
+  })()}
+</section>
 
           {/* ── Sale Details ── */}
           <section>

@@ -5,6 +5,7 @@ import type { RepairJob, RepairCharge, ChargeType } from "@/types/workShopTypes"
 import { formatYen, CHARGE_TYPE_CONFIG } from "../utils/workshopUtils";
 import { MECHANICS } from "@/data/workshop";
 import { X, Plus, Trash2 } from "lucide-react";
+import { PURCHASED_VEHICLES } from "@/data/vehiclesData";
 import {
   Dialog,
   DialogContent,
@@ -175,32 +176,80 @@ export default function AddRepairJobModal({
         </DialogHeader>
 
         <div className="px-6 py-5 space-y-6">
-          {/* ── Vehicle Info ── */}
-          <section>
-            <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
-              Vehicle Info
-            </h3>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-1.5">
-                <Label className="text-xs">VIN / Chassis No. *</Label>
-                <Input
-                  placeholder="e.g. JN1TANY31A0000001"
-                  value={form.vehicleId}
-                  onChange={(e) => setForm({ ...form, vehicleId: e.target.value })}
-                  className="h-9 text-sm font-mono"
-                />
+         {/* ── Vehicle Info ── */}
+<section>
+  <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
+    Vehicle Info
+  </h3>
+  <div className="grid grid-cols-2 gap-4">
+    {/* VIN dropdown */}
+    <div className="space-y-1.5">
+      <Label className="text-xs">VIN / Chassis No. *</Label>
+      <Select
+        value={form.vehicleId}
+        onValueChange={(selectedVin) => {
+          const match = PURCHASED_VEHICLES.find((v) => v.vehicleId === selectedVin);
+          setForm({
+            ...form,
+            vehicleId: selectedVin,
+            vehicleName: match?.vehicleName ?? "",
+          });
+        }}
+      >
+        <SelectTrigger className="h-9 text-sm font-mono">
+          <SelectValue placeholder="Select VIN…" />
+        </SelectTrigger>
+        <SelectContent>
+          {PURCHASED_VEHICLES.map((v) => (
+            <SelectItem key={v.vehicleId} value={v.vehicleId} className="text-sm font-mono">
+              <div className="flex flex-col">
+                <span>{v.vehicleId}</span>
+                <span className="text-[10px] text-gray-400 font-sans">{v.location}</span>
               </div>
-              <div className="space-y-1.5">
-                <Label className="text-xs">Vehicle Name *</Label>
-                <Input
-                  placeholder="e.g. Nissan Patrol Y61"
-                  value={form.vehicleName}
-                  onChange={(e) => setForm({ ...form, vehicleName: e.target.value })}
-                  className="h-9 text-sm"
-                />
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    </div>
+
+    {/* Vehicle name dropdown */}
+    <div className="space-y-1.5">
+      <Label className="text-xs">Vehicle Name *</Label>
+      <Select
+        value={form.vehicleName}
+        onValueChange={(selectedName) => {
+          const match = PURCHASED_VEHICLES.find((v) => v.vehicleName === selectedName);
+          setForm({
+            ...form,
+            vehicleName: selectedName,
+            vehicleId: match?.vehicleId ?? "",
+          });
+        }}
+      >
+        <SelectTrigger className="h-9 text-sm">
+          <SelectValue placeholder="Select vehicle…" />
+        </SelectTrigger>
+        <SelectContent>
+          {PURCHASED_VEHICLES.map((v) => (
+            <SelectItem key={v.vehicleId} value={v.vehicleName} className="text-sm">
+              <div className="flex flex-col">
+                <span>{v.vehicleName}</span>
+                <span className="text-[10px] text-gray-400">{v.location}</span>
               </div>
-            </div>
-          </section>
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    </div>
+  </div>
+
+  {/* Show selected vehicle location as a hint */}
+  {form.vehicleId && (
+    <p className="text-[11px] text-gray-400 mt-2">
+      📍 {PURCHASED_VEHICLES.find((v) => v.vehicleId === form.vehicleId)?.location ?? ""}
+    </p>
+  )}
+</section>
 
           {/* ── Job Details ── */}
           <section>
