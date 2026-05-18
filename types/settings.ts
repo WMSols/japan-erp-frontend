@@ -1,6 +1,6 @@
 export type UserRole = "admin" | "accountant" | "sales_manager" | "workshop_manager";
 export type UserStatus = "active" | "inactive";
-export type LocationType = "yard" | "warehouse" | "workshop" | "office";
+export type LocationType = "yard" | "warehouse" | "workshop" | "office" | "showroom";
 
 export interface CompanyProfile {
   name: string;

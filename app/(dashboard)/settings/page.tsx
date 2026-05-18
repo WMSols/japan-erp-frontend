@@ -6,7 +6,6 @@ import { Building, Users, MapPin, BookOpen } from "lucide-react";
 import { mockCompanyProfile, mockSystemUsers, mockLocations, mockChartOfAccounts } from "@/data/settingsData";
 import { CompanyProfileTab } from "./components/CompanyProfileTab";
 import { UserManagementTab } from "./components/UserManagementTab";
-import { LocationManagementTab } from "./components/LocationManagementTab";
 import { ChartOfAccountsTab } from "./components/ChartOfAccountsTab";
 
 export default function SettingsPage() {
@@ -29,10 +28,6 @@ export default function SettingsPage() {
             <Users className="w-4 h-4 mr-2" />
             Users & Roles
           </TabsTrigger>
-          <TabsTrigger value="locations" className="data-[state=active]:bg-gray-50 data-[state=active]:text-gray-900 text-gray-500 px-4 py-2">
-            <MapPin className="w-4 h-4 mr-2" />
-            Warehouses & Yards
-          </TabsTrigger>
           <TabsTrigger value="chart-of-accounts" className="data-[state=active]:bg-gray-50 data-[state=active]:text-gray-900 text-gray-500 px-4 py-2">
             <BookOpen className="w-4 h-4 mr-2" />
             Chart of Accounts
@@ -48,9 +43,6 @@ export default function SettingsPage() {
             <UserManagementTab initialUsers={mockSystemUsers} />
           </TabsContent>
 
-          <TabsContent value="locations" className="m-0 focus-visible:outline-none">
-            <LocationManagementTab initialLocations={mockLocations} />
-          </TabsContent>
 
           <TabsContent value="chart-of-accounts" className="m-0 focus-visible:outline-none">
             <ChartOfAccountsTab initialAccounts={mockChartOfAccounts} />

@@ -14,7 +14,7 @@ import {
 } from "./components/SidebarIcons";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { User2 } from "lucide-react";
+import { User2, Warehouse } from "lucide-react";
 
 type NavItem = {
   label: string;
@@ -23,14 +23,15 @@ type NavItem = {
 };
 
 const navItems: NavItem[] = [
-  { label: "Vehicles",  icon: <CarIcon />,     href: "/" },
-  { label: "Workshop",  icon: <WrenchIcon />,  href: "/workshop" },
-  { label: "Sales",     icon: <SalesIcon />,   href: "/sales" },
-  { label: "Ledgers",   icon: <LedgerIcon />,  href: "/ledgers" },
-  { label: "Reports",   icon: <ReportsIcon />, href: "/reports" },
+  { label: "Vehicles", icon: <CarIcon />, href: "/" },
+  { label: "Workshop", icon: <WrenchIcon />, href: "/workshop" },
+  { label: "Sales", icon: <SalesIcon />, href: "/sales" },
+  { label: "Ledgers", icon: <LedgerIcon />, href: "/ledgers" },
+  { label: "Reports", icon: <ReportsIcon />, href: "/reports" },
+  { label: "Warehouse/Yards", icon: <Warehouse size={20} />, href: "/warehouse-yards" },
   { label: "Customers", icon: <User2 size={20} />, href: "/customers" },
   { label: "Suppliers", icon: <User2 size={20} />, href: "/suppliers" },
-  { label: "Settings",  icon: <SettingsIcon />, href: "/settings" },
+  { label: "Settings", icon: <SettingsIcon />, href: "/settings" },
 ];
 
 export default function Sidebar() {

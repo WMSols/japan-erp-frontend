@@ -38,6 +38,7 @@ export const LOCATION_TYPE_CONFIG: Record<string, { label: string; className: st
   office: { label: "Head Office", className: "bg-blue-50 text-blue-700 border-blue-200" },
   yard: { label: "Vehicle Yard", className: "bg-green-50 text-green-700 border-green-200" },
   warehouse: { label: "Parts Warehouse", className: "bg-purple-50 text-purple-700 border-purple-200" },
+  showroom: { label: "Showroom", className: "bg-emerald-50 text-emerald-700 border-purple-200" },
   workshop: { label: "Repair Workshop", className: "bg-orange-50 text-orange-700 border-orange-200" },
 };
 

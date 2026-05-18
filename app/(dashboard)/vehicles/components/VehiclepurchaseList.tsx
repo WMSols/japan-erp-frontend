@@ -1,10 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import type { VehiclePurchase } from "@/types/types";
 
 // ── Status config ──────────────────────────────────────────────────────────
 const STATUS_STYLES: Record<VehiclePurchase["status"], string> = {
+  Draft:      "bg-gray-50 text-gray-500 border-gray-200",
   Purchased:  "bg-blue-50 text-blue-600 border-blue-100",
   "In Repair":"bg-amber-50 text-amber-600 border-amber-100",
   Ready:      "bg-emerald-50 text-emerald-600 border-emerald-100",
@@ -46,7 +48,7 @@ function PurchaseRow({
   const totalCost = purchase.purchasePrice + purchase.auctionFee;
 
   return (
-    <tr className="group border-b border-gray-50 hover:bg-gray-50/60 transition-colors duration-100">
+    <tr className=" border-b border-gray-50 hover:bg-gray-50/60 transition-colors duration-100">
       {/* Thumbnail */}
       <td className="py-3 pl-5 pr-3 w-16">
         <div className="w-12 h-9 rounded-md overflow-hidden border border-gray-100 flex-shrink-0">
@@ -96,34 +98,50 @@ function PurchaseRow({
       </td>
 
       {/* Actions */}
-      <td className="py-3 pl-3 pr-5 text-right">
-        {confirmDelete ? (
-          <div className="flex items-center justify-end gap-2">
-            <button
-              onClick={() => onDelete(purchase.id)}
-              className="text-[11px] font-medium text-red-500 hover:text-red-700"
-            >
-              Confirm
-            </button>
-            <span className="text-gray-200">|</span>
-            <button
-              onClick={() => setConfirmDelete(false)}
-              className="text-[11px] text-gray-400 hover:text-gray-600"
-            >
-              Cancel
-            </button>
-          </div>
-        ) : (
-          <button
-            onClick={() => setConfirmDelete(true)}
-            className="opacity-0 group-hover:opacity-100 p-1.5 rounded-md text-gray-300 hover:text-red-400 hover:bg-red-50 transition-all duration-150"
-            title="Remove"
+      <td className="py-3 pl-3 pr-5">
+        <div className="flex items-center justify-end gap-2">
+          {/* Open button — always visible */}
+          <Link
+            href={`/vehicles/${purchase.id}`}
+            className=" flex items-center gap-1 h-7 px-2.5 rounded-md text-[11px] font-medium text-gray-600 bg-gray-100 hover:bg-gray-200 transition-all duration-150"
           >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+              <polyline points="15 3 21 3 21 9"/>
+              <line x1="10" y1="14" x2="21" y2="3"/>
             </svg>
-          </button>
-        )}
+            Open
+          </Link>
+
+          {/* Delete */}
+          {confirmDelete ? (
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => onDelete(purchase.id)}
+                className="text-[11px] font-medium text-red-500 hover:text-red-700"
+              >
+                Confirm
+              </button>
+              <span className="text-gray-200">|</span>
+              <button
+                onClick={() => setConfirmDelete(false)}
+                className="text-[11px] text-gray-400 hover:text-gray-600"
+              >
+                Cancel
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => setConfirmDelete(true)}
+              className=" p-1.5 rounded-md text-gray-300 hover:text-red-400 hover:bg-red-50 transition-all duration-150"
+              title="Remove"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/>
+              </svg>
+            </button>
+          )}
+        </div>
       </td>
     </tr>
   );
@@ -279,18 +297,16 @@ export default function VehiclePurchaseList({ purchases, onDelete }: Props) {
           <p className="text-[11px] text-gray-300">
             Showing {filtered.length} of {purchases.length}
           </p>
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              {(["Purchased","In Repair","Ready","Sold"] as VehiclePurchase["status"][]).map((s) => {
-                const count = purchases.filter((p) => p.status === s).length;
-                if (count === 0) return null;
-                return (
-                  <span key={s} className={`text-[10px] px-1.5 py-0.5 rounded border font-medium ${STATUS_STYLES[s]}`}>
-                    {count} {s}
-                  </span>
-                );
-              })}
-            </div>
+          <div className="flex items-center gap-2">
+            {(["Draft", "Purchased", "In Repair", "Ready", "Sold"] as VehiclePurchase["status"][]).map((s) => {
+              const count = purchases.filter((p) => p.status === s).length;
+              if (count === 0) return null;
+              return (
+                <span key={s} className={`text-[10px] px-1.5 py-0.5 rounded border font-medium ${STATUS_STYLES[s]}`}>
+                  {count} {s}
+                </span>
+              );
+            })}
           </div>
         </div>
       )}
